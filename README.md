@@ -31,3 +31,7 @@ in https://github.com/sdavignon/lunar-colony-registry. This draft was extracted
 from that repository at e087e42e5bda655a6469ebec00281d1da35fa077.
 See [LAUNCH.md](LAUNCH.md) for outstanding decisions, capital flow and verification.
 No deployment keys or financial execution are configured in CI.
+
+The lockfile marks Ganache's bundled macOS-only fsevents dependency optional
+so npm ci works on Windows as well as Linux. In restricted Windows environments,
+set TEMP and TMP to a writable workspace scratch directory before running tests.
