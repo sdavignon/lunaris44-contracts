@@ -18,7 +18,7 @@ try {
  const provider=new BrowserProvider(chain);
  const deployer=await provider.getSigner(0),treasury=await provider.getSigner(1),recipient=await provider.getSigner(2);
  const factory=new ContractFactory(artifact.abi,'0x'+artifact.evm.bytecode.object,deployer);
- const token=await factory.deploy(await treasury.getAddress(),44000000n);
+ const token=await factory.deploy(await treasury.getAddress());
  await token.waitForDeployment();
  const supply=parseUnits('44000000',18);
  assert.equal(await token.name(),'Lunaris44');
@@ -38,14 +38,9 @@ try {
  assert.equal(await token.balanceOf(await treasury.getAddress()),supply-2n*amount);
  await assert.rejects(token.transferFrom(await treasury.getAddress(),await recipient.getAddress(),1n));
  await assert.rejects(token.transfer(await treasury.getAddress(),1n));
- await assert.rejects(factory.deploy(ZeroAddress,1n));
- await assert.rejects(factory.deploy(await treasury.getAddress(),0n));
+ await assert.rejects(factory.deploy(ZeroAddress));
+ assert.deepEqual(artifact.abi.find(x=>x.type==='constructor').inputs.map(x=>x.type),['address']);
  await assert.rejects(token.connect(treasury).transfer(ZeroAddress,1n));
- const maxWhole=((1n<<256n)-1n)/(10n**18n);
- await assert.rejects(factory.deploy(await treasury.getAddress(),maxWhole+1n));
- const maxToken=await factory.deploy(await treasury.getAddress(),maxWhole);
- await maxToken.waitForDeployment();
- assert.equal(await maxToken.totalSupply(),maxWhole*10n**18n);
  await (await token.connect(treasury).approve(await deployer.getAddress(),1n)).wait();
  await assert.rejects(token.transferFrom(await treasury.getAddress(),await recipient.getAddress(),2n));
  assert.equal(await token.allowance(await treasury.getAddress(),await deployer.getAddress()),1n);
@@ -54,7 +49,7 @@ try {
  const funcs=artifact.abi.filter(x=>x.type==='function').map(x=>x.name);
  assert.deepEqual(funcs.sort(),['allowance','approve','balanceOf','decimals','name','symbol','totalSupply','transfer','transferFrom'].sort());
  assert.equal(await token.totalSupply(),supply);
- console.log('PASS: compilation; metadata; supply scaled to 18 decimals; treasury-only initial allocation; untaxed transfers; delegated transfer; allowance exhaustion; insufficient balance; zero recipient; zero supply; absence of admin/mint functions; invariant supply.');
+ console.log('PASS: compilation; metadata; exactly 44 million tokens with 18 decimals; treasury-only initial allocation; untaxed transfers; delegated transfer; allowance exhaustion; insufficient balance; zero recipient; invariant supply.');
  console.log('Local in-memory EVM only. No testnet or mainnet deployment performed.');
- console.log('PASS: exact untaxed debits and credits; overflow rejection and maximum supply boundary; zero-address transfer rejection; exact ERC20 ABI; failed-transfer state preservation.');
+ console.log('PASS: exact untaxed debits and credits; no constructor supply parameter; zero-address transfer rejection; exact ERC20 ABI; failed-transfer state preservation.');
 } finally { await chain.disconnect(); }
