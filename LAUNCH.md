@@ -5,9 +5,18 @@ Website: https://lunaris44.space
 Website repository: https://github.com/sdavignon/lunar-colony-registry
 Contract extracted from its contracts directory at commit e087e42e5bda655a6469ebec00281d1da35fa077.
 
+## Confirmed decisions and live website review (2026-10-19)
+
+Scott approved a supply of 44,000,000 LUN44 and identified the Independent Lunar
+Initiative as the funding purpose. Supply is hardcoded in the constructor.
+The live website describes concept/community development, a pioneer registry,
+and longer-term lunar feasibility research and partnerships. Habitat designs are
+explicitly speculative, not built, tested or funded systems. No specific raise
+target, spending budget or funded mission is published. These are not inferred
+from the vision. The supplied wallet's role remains unconfirmed.
+
 ## Owner decisions still required
 
-- Fixed whole-token supply (44,000,000 is an unapproved example).
 - Initial recipient and custody arrangement. The supplied address has not been confirmed as the recipient.
 - Token allocation across fundraising, liquidity, team and reserves; vesting, if any, must be external to this immutable ERC-20.
 - Fundraising target, funded activities, issuer/jurisdiction, buyer eligibility and reviewed offering terms.
